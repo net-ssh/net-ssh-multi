@@ -1,12 +1,12 @@
 @spec = Gem::Specification.new do |s|
-	s.name = "net-ssh-multi"
+  s.name = "net-ssh-multi"
   s.rubyforge_project = 'net-ssh-multi'
-	s.version = "1.1"
-	s.summary = "Control multiple Net::SSH connections via a single interface."
-	s.description = s.summary
-	s.authors = ["Jamis Buck", "Delano Mandelbaum"]
-	s.email = ["net-ssh@solutious.com"]
-	s.homepage = "http://github.com/net-ssh/net-ssh"
+  s.version = "1.1"
+  s.summary = "Control multiple Net::SSH connections via a single interface."
+  s.description = s.summary
+  s.authors = ["Jamis Buck", "Delano Mandelbaum"]
+  s.email = ["net-ssh@solutious.com"]
+  s.homepage = "http://github.com/net-ssh/net-ssh-multi"
   
   s.extra_rdoc_files = %w[README.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
