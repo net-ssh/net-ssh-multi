@@ -6,7 +6,7 @@
   s.description = s.summary
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
   s.email = ["net-ssh@solutious.com"]
-  s.homepage = "http://github.com/net-ssh/net-ssh"
+  s.homepage = "http://github.com/net-ssh/net-ssh-multi"
   
   s.extra_rdoc_files = %w[README.rdoc CHANGELOG.rdoc]
   s.has_rdoc = true
