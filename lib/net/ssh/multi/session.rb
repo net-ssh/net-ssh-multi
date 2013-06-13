@@ -476,7 +476,12 @@ module Net; module SSH; module Multi
           return connection
         end
 
-        @open_connections += 1
+        # Only increment the open_connections count if the connection
+        # is not being forced. Incase of a force, it will already be
+        # incremented.
+        if !force
+          @open_connections += 1
+        end
       end
 
       begin
@@ -542,6 +547,10 @@ module Net; module SSH; module Multi
       count = concurrent_connections ? (concurrent_connections - open_connections) : @pending_sessions.length
       count.times do
         session = @pending_sessions.pop or break
+        # Increment the open_connections count here to prevent
+        # creation of connection thread again before that is
+        # incremented by the thread.
+        @session_mutex.synchronize { @open_connections += 1 }
         @connect_threads << Thread.new do
           session.replace_with(next_session(session.server, true))
         end
