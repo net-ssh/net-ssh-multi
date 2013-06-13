@@ -140,8 +140,9 @@ module Net; module SSH; module Multi
 
     # Returns +true+ if the session has been opened, and the session is currently
     # busy (as defined by Net::SSH::Connection::Session#busy?).
+    # Also returns false if the server has failed to connect.
     def busy?(include_invisible=false)
-      session && session.busy?(include_invisible)
+      !failed? && session && session.busy?(include_invisible)
     end
 
     # Closes this server's session. If the session has not yet been opened,
