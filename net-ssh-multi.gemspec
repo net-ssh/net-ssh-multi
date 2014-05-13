@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
     "test/session_test.rb",
     "test/test_all.rb"
   ]
-  s.homepage = "https://github.com/net-ssh/net-scp"
+  s.homepage = "https://github.com/net-ssh/net-ssh-multi"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubyforge_project = "net-ssh-multi"
