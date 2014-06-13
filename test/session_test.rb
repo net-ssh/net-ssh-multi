@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/multi/session'
 
-class SessionTest < Test::Unit::TestCase
+class SessionTest < Minitest::Test
   def setup
     @session = Net::SSH::Multi::Session.new
   end
