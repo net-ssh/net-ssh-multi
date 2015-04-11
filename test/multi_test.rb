@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/multi'
 
-class MultiTest < Test::Unit::TestCase
+class MultiTest < Minitest::Test
   def test_start_with_block_should_yield_session_and_then_close
     Net::SSH::Multi::Session.any_instance.expects(:loop)
     Net::SSH::Multi::Session.any_instance.expects(:close)
