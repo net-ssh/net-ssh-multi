@@ -1,4 +1,10 @@
 
+=== 1.2.1 / 11 Apr 2015
+
+* Fix two problems with :concurrent_connections option (#4) [sersut]
+* Replaced test-unit with minitest [juliandunn]
+
+
 === 1.2.0 / 06 Feb 2013
 
 * Added public cert. All gem releases are now signed. See INSTALL in readme.
