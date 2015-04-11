@@ -2,7 +2,7 @@ require 'common'
 require 'net/ssh/multi/server'
 require 'net/ssh/multi/session_actions'
 
-class SessionActionsTest < Test::Unit::TestCase
+class SessionActionsTest < Minitest::Test
   class SessionActionsContainer
     include Net::SSH::Multi::SessionActions
 

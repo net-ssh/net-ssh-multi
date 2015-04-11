@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/multi/channel'
 
-class ChannelTest < Test::Unit::TestCase
+class ChannelTest < Minitest::Test
   def test_each_should_iterate_over_each_component_channel
     channels = [c1 = mock('channel'), c2 = mock('channel'), c3 = mock('channel')]
     channel = Net::SSH::Multi::Channel.new(mock('session'), channels)

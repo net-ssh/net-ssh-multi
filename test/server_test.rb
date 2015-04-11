@@ -1,7 +1,7 @@
 require 'common'
 require 'net/ssh/multi/server'
 
-class ServerTest < Test::Unit::TestCase
+class ServerTest < Minitest::Test
   def setup
     @master = stub('multi-session', :default_user => "bob")
   end
@@ -50,7 +50,7 @@ class ServerTest < Test::Unit::TestCase
     s1 = server('user@host1:1234')
     s2 = server('user@host2:1234')
     assert !s1.eql?(s2)
-    assert_not_equal s1.hash, s2.hash
+    refute_equal s1.hash, s2.hash
     assert s1 != s2
   end
 
@@ -58,7 +58,7 @@ class ServerTest < Test::Unit::TestCase
     s1 = server('user@host:1234')
     s2 = server('user@host:1235')
     assert !s1.eql?(s2)
-    assert_not_equal s1.hash, s2.hash
+    refute_equal s1.hash, s2.hash
     assert s1 != s2
   end
 
@@ -66,7 +66,7 @@ class ServerTest < Test::Unit::TestCase
     s1 = server('user1@host:1234')
     s2 = server('user2@host:1234')
     assert !s1.eql?(s2)
-    assert_not_equal s1.hash, s2.hash
+    refute_equal s1.hash, s2.hash
     assert s1 != s2
   end
 
@@ -112,7 +112,7 @@ class ServerTest < Test::Unit::TestCase
   end
 
   def test_close_channels_when_session_is_not_open_should_not_do_anything
-    assert_nothing_raised { server('host').close_channels }
+    server('host').close_channels
   end
 
   def test_close_channels_when_session_is_open_should_iterate_over_open_channels_and_close_them
@@ -127,7 +127,7 @@ class ServerTest < Test::Unit::TestCase
   end
 
   def test_close_when_session_is_not_open_should_not_do_anything
-    assert_nothing_raised { server('host').close }
+    server('host').close
   end
 
   def test_close_when_session_is_open_should_close_session
