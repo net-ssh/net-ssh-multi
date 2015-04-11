@@ -54,13 +54,13 @@
             href="../../SSH.html">SSH</a> channels and executing commands, allowing for
             these operations to be done in parallel across multiple connections.</p>
             
-            <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Multi</span>.<span class="ruby-identifier">start</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># access servers via a gateway</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">via</span> <span class="ruby-string">'gateway'</span>, <span class="ruby-string">'gateway-user'</span>&#x000A;&#x000A;  <span class="ruby-comment"># define the servers we want to use</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'user1@host1'</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'user2@host2'</span>&#x000A;&#x000A;  <span class="ruby-comment"># define servers in groups for more granular access</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> :<span class="ruby-identifier">app</span> <span class="ruby-keyword">do</span>&#x000A;    <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'user@app1'</span>&#x000A;    <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'user@app2'</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;&#x000A;  <span class="ruby-comment"># execute commands on all servers</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;uptime&quot;</span>&#x000A;&#x000A;  <span class="ruby-comment"># execute commands on a subset of servers</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">with</span>(:<span class="ruby-identifier">app</span>).<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;hostname&quot;</span>&#x000A;&#x000A;  <span class="ruby-comment"># run the aggregated event loop</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">loop</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>Net::SSH::Multi.start do |session|&#x000A;  # access servers via a gateway&#x000A;  session.via 'gateway', 'gateway-user'&#x000A;  # define the servers we want to use&#x000A;  session.use 'user1@host1'&#x000A;  session.use 'user2@host2'&#x000A;&#x000A;  # define servers in groups for more granular access&#x000A;  session.group :app do&#x000A;    session.use 'user@app1'&#x000A;    session.use 'user@app2'&#x000A;  end&#x000A;&#x000A;  # execute commands on all servers&#x000A;  session.exec &quot;uptime&quot;&#x000A;&#x000A;  # execute commands on a subset of servers&#x000A;  session.with(:app).exec &quot;hostname&quot;&#x000A;&#x000A;  # run the aggregated event loop&#x000A;  session.loop&#x000A;end</pre>
             
             <p>Note that connections are established lazily, as soon as they are needed.
             You can force the connections to be opened immediately, though, using the
             <a href="SessionActions.html#method-i-connect-21">connect!</a> method.</p>
             
-            <h2 id="label-Concurrent+Connection+Limiting">Concurrent Connection Limiting</h2>
+            <h2>Concurrent Connection Limiting</h2>
             
             <p>Sometimes you may be dealing with a large number of servers, and if you try
             to have connections open to all of them simultaneously you'll run into open
@@ -71,13 +71,13 @@
             then ensure that no more than this number of connections are ever open
             simultaneously.</p>
             
-            <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Multi</span>.<span class="ruby-identifier">start</span>(:<span class="ruby-identifier">concurrent_connections</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">5</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>Net::SSH::Multi.start(:concurrent_connections =&gt; 5) do |session|&#x000A;  # ...&#x000A;end</pre>
             
             <p>Opening channels and executing commands will still work exactly as before,
             but <a href="../Multi.html">Net::SSH::Multi</a> will transparently close
             finished connections and open pending ones.</p>
             
-            <h2 id="label-Controlling+Connection+Errors">Controlling Connection Errors</h2>
+            <h2>Controlling Connection Errors</h2>
             
             <p>By default, <a href="../Multi.html">Net::SSH::Multi</a> will raise an
             exception if a connection error occurs when connecting to a server. This
@@ -91,7 +91,7 @@
             session to :ignore (or to :warn, if you want a warning message when a
             connection attempt fails):</p>
             
-            <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Multi</span>.<span class="ruby-identifier">start</span>(:<span class="ruby-identifier">on_error</span> =<span class="ruby-operator">&gt;</span> :<span class="ruby-identifier">ignore</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>Net::SSH::Multi.start(:on_error =&gt; :ignore) do |session|&#x000A;  # ...&#x000A;end</pre>
             
             <p>The default is :fail, which causes the exception to bubble up.
             Additionally, you can specify a Proc object as the value for <a
@@ -101,12 +101,12 @@
             :retry as the payload, or force the exception to be reraised by throwing
             :go with :raise as the payload:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">server</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">server</span>[:<span class="ruby-identifier">connection_attempts</span>] <span class="ruby-operator">||=</span> <span class="ruby-value">0</span>&#x000A;  <span class="ruby-keyword">if</span> <span class="ruby-identifier">server</span>[:<span class="ruby-identifier">connection_attempts</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-value">3</span>&#x000A;    <span class="ruby-identifier">server</span>[:<span class="ruby-identifier">connection_attempts</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>&#x000A;    <span class="ruby-identifier">throw</span> :<span class="ruby-identifier">go</span>, :<span class="ruby-keyword">retry</span>&#x000A;  <span class="ruby-keyword">else</span>&#x000A;    <span class="ruby-identifier">throw</span> :<span class="ruby-identifier">go</span>, :<span class="ruby-identifier">raise</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Multi</span>.<span class="ruby-identifier">start</span>(:<span class="ruby-identifier">on_error</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">handler</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>handler = Proc.new do |server|&#x000A;  server[:connection_attempts] ||= 0&#x000A;  if server[:connection_attempts] &lt; 3&#x000A;    server[:connection_attempts] += 1&#x000A;    throw :go, :retry&#x000A;  else&#x000A;    throw :go, :raise&#x000A;  end&#x000A;end&#x000A;Net::SSH::Multi.start(:on_error =&gt; handler) do |session|&#x000A;  # ...&#x000A;end</pre>
             
             <p>Any other thrown value (or no thrown value at all) will result in the
             failure being ignored.</p>
             
-            <h2 id="label-Lazily+Evaluated+Server+Definitions">Lazily Evaluated <a href="Server.html">Server</a> Definitions</h2>
+            <h2>Lazily Evaluated <a href="Server.html">Server</a> Definitions</h2>
             
             <p>Sometimes you might be dealing with an environment where you don't know the
             names or addresses of the servers until runtime. You can certainly
@@ -120,7 +120,7 @@
             <p>You can do this by passing a block to <a
             href="Session.html#method-i-use">use</a>:</p>
             
-            <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">opt</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">lookup_ip_address_of_remote_host</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+            <pre>session.use do |opt|&#x000A;  lookup_ip_address_of_remote_host&#x000A;end</pre>
             
             <p>See <a href="Session.html#method-i-use">use</a> for more information about
             this usage.</p>
@@ -195,7 +195,7 @@
                     <td class='context-item-desc'>
                       
                       <p>The default Net::SSH::Gateway instance to use to connect to the servers. If
-                      <code>nil</code>, no default gateway will be used.</p>
+                      <tt>nil</tt>, no default gateway will be used.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -264,7 +264,7 @@
                   
                   <p>You can set the <a
                   href="Session.html#attribute-i-concurrent_connections">concurrent_connections</a>
-                  property in the options. Setting it to <code>nil</code> (the default) will
+                  property in the options. Setting it to <tt>nil</tt> (the default) will
                   cause <a href="../Multi.html">Net::SSH::Multi</a> to ignore any concurrent
                   connection limit and allow all defined sessions to be open simultaneously.
                   Setting it to an integer will cause <a
@@ -272,7 +272,7 @@
                   of concurrently open sessions, opening subsequent sessions only when other
                   sessions finish and close.</p>
                   
-                  <pre class="ruby"><span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Multi</span>.<span class="ruby-identifier">start</span>(:<span class="ruby-identifier">concurrent_connections</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">10</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">session</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-operator">...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>Net::SSH::Multi.start(:concurrent_connections =&gt; 10) do |session|&#x000A;  session.use ...&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
@@ -321,7 +321,7 @@
                   href="Session.html#attribute-i-server_list">server_list</a> array
                   (typically by calling <a href="Session.html#method-i-use">use</a>):</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">server1</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span>(<span class="ruby-string">'host1'</span>, <span class="ruby-string">'user1'</span>)&#x000A;<span class="ruby-identifier">server2</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span>(<span class="ruby-string">'host2'</span>, <span class="ruby-string">'user2'</span>)&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> :<span class="ruby-identifier">app</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">server1</span>, :<span class="ruby-identifier">web</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">server2</span>&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> :<span class="ruby-identifier">staging</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">server1</span>, <span class="ruby-identifier">server2</span>]&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> <span class="ruby-node">%w(xen linux)</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">server2</span>&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> <span class="ruby-node">%w(rackspace backup)</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">server1</span>, <span class="ruby-identifier">server2</span>]</pre>
+                  <pre>server1 = session.use('host1', 'user1')&#x000A;server2 = session.use('host2', 'user2')&#x000A;session.group :app =&gt; server1, :web =&gt; server2&#x000A;session.group :staging =&gt; [server1, server2]&#x000A;session.group %w(xen linux) =&gt; server2&#x000A;session.group %w(rackspace backup) =&gt; [server1, server2]</pre>
                   
                   <p>Secondly, instead of a mapping of groups to servers, you can just provide a
                   list of group names, and then a block. Inside the block, any calls to <a
@@ -348,10 +348,10 @@
                 <div class='description'>
                   
                   <p>Run the aggregated event loop for all open server sessions, until the given
-                  block returns <code>false</code>. If no block is given, the loop will run
-                  for as long as <a href="SessionActions.html#method-i-busy-3F">busy?</a>
-                  returns <code>true</code> (in other words, for as long as there are any
-                  (non-invisible) channels open).</p>
+                  block returns <tt>false</tt>. If no block is given, the loop will run for
+                  as long as <a href="SessionActions.html#method-i-busy-3F">busy?</a> returns
+                  <tt>true</tt> (in other words, for as long as there are any (non-invisible)
+                  channels open).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-loop-source'); return false">
@@ -394,12 +394,12 @@
                 <div class='description'>
                   
                   <p>Run a single iteration of the aggregated event loop for all open server
-                  sessions. The <code>wait</code> parameter indicates how long to wait for an
-                  event to appear on any of the different sessions; <code>nil</code> (the
+                  sessions. The <tt>wait</tt> parameter indicates how long to wait for an
+                  event to appear on any of the different sessions; <tt>nil</tt> (the
                   default) means "wait forever". If the block is given, then it will be used
                   to determine whether <a href="Session.html#method-i-process">process</a>
-                  returns <code>true</code> (the block did not return <code>false</code>), or
-                  <code>false</code> (the block returned <code>false</code>).</p>
+                  returns <tt>true</tt> (the block did not return <tt>false</tt>), or
+                  <tt>false</tt> (the block returned <tt>false</tt>).</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-process-source'); return false">
@@ -458,11 +458,11 @@
                   servers to those whose properties do <em>not</em> match). Properties are
                   described when the server is defined (via the :properties key):</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">group</span> :<span class="ruby-identifier">db</span> <span class="ruby-keyword">do</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'dbmain'</span>, <span class="ruby-string">'user'</span>, :<span class="ruby-identifier">properties</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">primary</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span> }&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'dbslave'</span>, <span class="ruby-string">'user2'</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'dbslve2'</span>, <span class="ruby-string">'user2'</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-comment"># return ONLY on the servers in the :db group which have the :primary</span>&#x000A;<span class="ruby-comment"># property set to true.</span>&#x000A;<span class="ruby-identifier">primary</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">servers_for</span>(:<span class="ruby-identifier">db</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">only</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">primary</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span> } })</pre>
+                  <pre>session.group :db do&#x000A;  session.use 'dbmain', 'user', :properties =&gt; { :primary =&gt; true }&#x000A;  session.use 'dbslave', 'user2'&#x000A;  session.use 'dbslve2', 'user2'&#x000A;end&#x000A;# return ONLY on the servers in the :db group which have the :primary&#x000A;# property set to true.&#x000A;primary = session.servers_for(:db =&gt; { :only =&gt; { :primary =&gt; true } })</pre>
                   
                   <p>You can, naturally, combine these methods:</p>
                   
-                  <pre class="ruby"><span class="ruby-comment"># all servers in :app and :web, and all servers in :db with the</span>&#x000A;<span class="ruby-comment"># :primary property set to true</span>&#x000A;<span class="ruby-identifier">servers</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">servers_for</span>(:<span class="ruby-identifier">app</span>, :<span class="ruby-identifier">web</span>, :<span class="ruby-identifier">db</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">only</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">primary</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span> } })</pre>
+                  <pre># all servers in :app and :web, and all servers in :db with the&#x000A;# :primary property set to true&#x000A;servers = session.servers_for(:app, :web, :db =&gt; { :only =&gt; { :primary =&gt; true } })</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-servers_for-source'); return false">
@@ -480,17 +480,17 @@
                 <div class='description'>
                   
                   <p>Defines a new server definition, to be managed by this session. The server
-                  is at the given <code>host</code>, and will be connected to as the given
-                  <code>user</code>. The other options are passed as-is to the <a
+                  is at the given <tt>host</tt>, and will be connected to as the given
+                  <tt>user</tt>. The other options are passed as-is to the <a
                   href="../../SSH.html">Net::SSH</a> session constructor.</p>
                   
                   <p>If a default gateway has been specified previously (with <a
                   href="Session.html#method-i-via">via</a>) it will be passed to the new
                   server definition. You can override this by passing a different
-                  Net::SSH::Gateway instance (or <code>nil</code>) with the :via key in the
-                  <code>options</code>.</p>
+                  Net::SSH::Gateway instance (or <tt>nil</tt>) with the :via key in the
+                  <tt>options</tt>.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'host'</span>&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'user@host2'</span>, :<span class="ruby-identifier">via</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">use</span> <span class="ruby-string">'host3'</span>, :<span class="ruby-identifier">user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;user3&quot;</span>, :<span class="ruby-identifier">via</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SSH</span><span class="ruby-operator">::</span><span class="ruby-constant">Gateway</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'gateway.host'</span>, <span class="ruby-string">'user'</span>)</pre>
+                  <pre>session.use 'host'&#x000A;session.use 'user@host2', :via =&gt; nil&#x000A;session.use 'host3', :user =&gt; &quot;user3&quot;, :via =&gt; Net::SSH::Gateway.new('gateway.host', 'user')</pre>
                   
                   <p>If only a single host is given, the new server instance is returned. You
                   can give multiple hosts at a time, though, in which case an array of server
@@ -502,9 +502,9 @@
                   href="DynamicServer.html">Net::SSH::Multi::DynamicServer</a> definition, to
                   be evaluated lazily the first time the server is needed. The block will
                   recive any options hash given to <a
-                  href="Session.html#method-i-use">use</a>, and should return
-                  <code>nil</code> (if no servers are to be added), a String or an array of
-                  Strings (to be interpreted as a connection specification), or a <a
+                  href="Session.html#method-i-use">use</a>, and should return <tt>nil</tt>
+                  (if no servers are to be added), a String or an array of Strings (to be
+                  interpreted as a connection specification), or a <a
                   href="Server.html">Server</a> or an array of Servers.</p>
                 </div>
                 <div class='source'>
@@ -553,7 +553,7 @@
                   href="Session.html#method-i-servers_for">servers_for</a> for a discussion
                   of how these criteria are interpreted.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">with</span>(:<span class="ruby-identifier">app</span>).<span class="ruby-identifier">exec</span>(<span class="ruby-string">'hostname'</span>)&#x000A;&#x000A;<span class="ruby-identifier">session</span>.<span class="ruby-identifier">with</span>(:<span class="ruby-identifier">app</span>, :<span class="ruby-identifier">db</span> =<span class="ruby-operator">&gt;</span> { :<span class="ruby-identifier">primary</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span> }) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">s</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">'date'</span>&#x000A;  <span class="ruby-identifier">s</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">'uptime'</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>session.with(:app).exec('hostname')&#x000A;session.with(:app, :db =&gt; { :primary =&gt; true }) do |s|&#x000A;  s.exec 'date'&#x000A;  s.exec 'uptime'&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-with-source'); return false">

@@ -97,7 +97,7 @@
                     <td class='context-item-desc'>
                       
                       <p>The Net::SSH::Gateway instance to use to establish the connection. Will be
-                      <code>nil</code> if the connection should be established without a gateway.</p>
+                      <tt>nil</tt> if the connection should be established without a gateway.</p>
                     </td>
                   </tr>
                   <tr class='top-aligned-row context-row'>
@@ -157,11 +157,10 @@
                 <div class='description'>
                   
                   <p>Creates a new <a href="Server.html">Server</a> instance with the given
-                  connection information. The <code>master</code> argument must be a
-                  reference to the <a href="Session.html">Net::SSH::Multi::Session</a>
-                  instance that will manage this server reference. The <code>options</code>
-                  hash must conform to the options described for Net::SSH::start, with two
-                  additions:</p>
+                  connection information. The <tt>master</tt> argument must be a reference to
+                  the <a href="Session.html">Net::SSH::Multi::Session</a> instance that will
+                  manage this server reference. The <tt>options</tt> hash must conform to the
+                  options described for Net::SSH::start, with two additions:</p>
                   <ul><li>
                   <p>:via =&gt; a Net::SSH::Gateway instance to use when establishing a
                   connection to this server.</p>
@@ -169,9 +168,9 @@
                   <p>:user =&gt; the name of the user to use when logging into this server.</p>
                   </li></ul>
                   
-                  <p>The <code>host</code> argument may include the username and port number, in
+                  <p>The <tt>host</tt> argument may include the username and port number, in
                   which case those values take precedence over similar values given in the
-                  <code>options</code>:</p>
+                  <tt>options</tt>:</p>
                   
                   <pre>server = Net::SSH::Multi::Server.new(session, 'user@host:1234')&#x000A;puts server.user #-&gt; user&#x000A;puts server.port #-&gt; 1234</pre>
                 </div>
@@ -179,7 +178,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-c-new-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">master</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-ivar">@master</span> = <span class="ruby-identifier">master</span>&#x000A;  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>&#x000A;&#x000A;  <span class="ruby-ivar">@user</span>, <span class="ruby-ivar">@host</span>, <span class="ruby-identifier">port</span> = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">%r^(?:([^;,:=]+)@|)(.*?)(?::(\d+)|)$/</span>)[<span class="ruby-value">1</span>,<span class="ruby-value">3</span>]&#x000A;&#x000A;  <span class="ruby-identifier">user_opt</span>, <span class="ruby-identifier">port_opt</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:user</span>), <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:port</span>)&#x000A;&#x000A;  <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@user</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">user_opt</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">master</span>.<span class="ruby-identifier">default_user</span>&#x000A;  <span class="ruby-identifier">port</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">port_opt</span>&#x000A;&#x000A;  <span class="ruby-ivar">@options</span>[<span class="ruby-value">:port</span>] = <span class="ruby-identifier">port</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">port</span>&#x000A;&#x000A;  <span class="ruby-ivar">@gateway</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:via</span>)&#x000A;  <span class="ruby-ivar">@failed</span> = <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-c-new-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 43</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">master</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">options</span>={})&#x000A;  <span class="ruby-ivar">@master</span> = <span class="ruby-identifier">master</span>&#x000A;  <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span>.<span class="ruby-identifier">dup</span>&#x000A;&#x000A;  <span class="ruby-ivar">@user</span>, <span class="ruby-ivar">@host</span>, <span class="ruby-identifier">port</span> = <span class="ruby-identifier">host</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^(?:([^;,:=]+)@|)(.*?)(?::(\d+)|)$/</span>)[<span class="ruby-value">1</span>,<span class="ruby-value">3</span>]&#x000A;&#x000A;  <span class="ruby-identifier">user_opt</span>, <span class="ruby-identifier">port_opt</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:user</span>), <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:port</span>)&#x000A;&#x000A;  <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@user</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">user_opt</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">master</span>.<span class="ruby-identifier">default_user</span>&#x000A;  <span class="ruby-identifier">port</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">port_opt</span>&#x000A;&#x000A;  <span class="ruby-ivar">@options</span>[<span class="ruby-value">:port</span>] = <span class="ruby-identifier">port</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">port</span>&#x000A;&#x000A;  <span class="ruby-ivar">@gateway</span> = <span class="ruby-ivar">@options</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value">:via</span>)&#x000A;  <span class="ruby-ivar">@failed</span> = <span class="ruby-keyword">false</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <h2>Public Instance methods</h2>
@@ -208,9 +207,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the value of the server property with the given <code>key</code>.
-                  <a href="Server.html">Server</a> properties are described via the
-                  <code>:properties</code> key in the options hash when defining the <a
+                  <p>Returns the value of the server property with the given <tt>key</tt>. <a
+                  href="Server.html">Server</a> properties are described via the
+                  <tt>:properties</tt> key in the options hash when defining the <a
                   href="Server.html">Server</a>.</p>
                 </div>
                 <div class='source'>
@@ -228,7 +227,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Sets the given key/value pair in the <code>:properties</code> key in the
+                  <p>Sets the given key/value pair in the <tt>:properties</tt> key in the
                   options hash. If the options hash has no :properties key, it will be
                   created.</p>
                 </div>
@@ -247,14 +246,15 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns <code>true</code> if the session has been opened, and the session
-                  is currently busy (as defined by Net::SSH::Connection::Session#busy?).</p>
+                  <p>Returns <tt>true</tt> if the session has been opened, and the session is
+                  currently busy (as defined by Net::SSH::Connection::Session#busy?). Also
+                  returns false if the server has failed to connect.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-busy-3F-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-busy-3F-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 143</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>=<span class="ruby-keyword">false</span>)&#x000A;  <span class="ruby-identifier">session</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">session</span>.<span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-busy-3F-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 144</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>=<span class="ruby-keyword">false</span>)&#x000A;  <span class="ruby-operator">!</span><span class="ruby-identifier">failed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">session</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">session</span>.<span class="ruby-identifier">busy?</span>(<span class="ruby-identifier">include_invisible</span>)&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-close'>
@@ -272,7 +272,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-close-source'); return false">
                     [show source]
                   </a>
-                  <pre id='method-i-close-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 149</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>&#x000A;<span class="ruby-keyword">ensure</span>&#x000A;  <span class="ruby-identifier">master</span>.<span class="ruby-identifier">server_closed</span>(<span class="ruby-keyword">self</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>&#x000A;  <span class="ruby-ivar">@session</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre id='method-i-close-source'><span class="ruby-comment"># File lib/net/ssh/multi/server.rb, line 150</span>&#x000A;<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>&#x000A;  <span class="ruby-identifier">session</span>.<span class="ruby-identifier">close</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>&#x000A;<span class="ruby-keyword">ensure</span>&#x000A;  <span class="ruby-identifier">master</span>.<span class="ruby-identifier">server_closed</span>(<span class="ruby-keyword">self</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">session</span>&#x000A;  <span class="ruby-ivar">@session</span> = <span class="ruby-keyword">nil</span>&#x000A;<span class="ruby-keyword">end</span></pre>
                 </div>
               </div>
               <div class='method public-instance' id='method-method-i-fail-21'>
@@ -284,8 +284,8 @@
                 <div class='description'>
                   
                   <p>Indicates (by default) that this server has just failed a connection
-                  attempt. If <code>flag</code> is false, this can be used to reset the
-                  failed flag so that a retry may be attempted.</p>
+                  attempt. If <tt>flag</tt> is false, this can be used to reset the failed
+                  flag so that a retry may be attempted.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-fail-21-source'); return false">
@@ -302,8 +302,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns <code>true</code> if this server has ever failed a connection
-                  attempt.</p>
+                  <p>Returns <tt>true</tt> if this server has ever failed a connection attempt.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-failed-3F-source'); return false">
@@ -320,10 +319,10 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Generates a <code>Fixnum</code> hash value for this object. This function
-                  has the property that +a.eql?(b)+ implies +a.hash == b.hash+. The hash
-                  value is used by class <code>Hash</code>. Any hash value that exceeds the
-                  capacity of a <code>Fixnum</code> will be truncated before being used.</p>
+                  <p>Generates a <tt>Fixnum</tt> hash value for this object. This function has
+                  the property that +a.eql?(b)+ implies +a.hash == b.hash+. The hash value is
+                  used by class <tt>Hash</tt>. Any hash value that exceeds the capacity of a
+                  <tt>Fixnum</tt> will be truncated before being used.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-hash-source'); return false">
@@ -375,11 +374,11 @@
                 <div class='description'>
                   
                   <p>Returns the <a href="../../SSH.html">Net::SSH</a> session object for this
-                  server. If <code>require_session</code> is false and the session has not
-                  previously been created, this will return <code>nil</code>. If
-                  <code>require_session</code> is true, the session will be instantiated if
-                  it has not already been instantiated, via the <code>gateway</code> if one
-                  is given, or directly (via Net::SSH::start) otherwise.</p>
+                  server. If <tt>require_session</tt> is false and the session has not
+                  previously been created, this will return <tt>nil</tt>. If
+                  <tt>require_session</tt> is true, the session will be instantiated if it
+                  has not already been instantiated, via the <tt>gateway</tt> if one is
+                  given, or directly (via Net::SSH::start) otherwise.</p>
                   
                   <pre>if server.session.nil?&#x000A;  puts &quot;connecting...&quot;&#x000A;  server.session(true)&#x000A;end</pre>
                   

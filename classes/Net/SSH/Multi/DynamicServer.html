@@ -51,11 +51,11 @@
             
             <pre>session.use { lookup_ip_address_of_server }</pre>
             
-            <p>This prevents <code>lookup_ip_address_of_server</code> from being invoked
+            <p>This prevents <tt>lookup_ip_address_of_server</tt> from being invoked
             unless the server is actually needed, at which point it is invoked and the
             result cached.</p>
             
-            <p>The callback should return either <code>nil</code> (in which case no new
+            <p>The callback should return either <tt>nil</tt> (in which case no new
             servers are instantiated), a String (representing a connection
             specification), an array of Strings, or an array of <a
             href="Server.html">Net::SSH::Multi::Server</a> instances.</p>
@@ -142,8 +142,8 @@
                   
                   <p>Create a new <a href="DynamicServer.html">DynamicServer</a> record, owned
                   by the given <a href="Session.html">Net::SSH::Multi::Session</a>
-                  <code>master</code>, with the given hash of <code>options</code>, and using
-                  the given Proc <code>callback</code> to lazily evaluate the actual server
+                  <tt>master</tt>, with the given hash of <tt>options</tt>, and using the
+                  given Proc <tt>callback</tt> to lazily evaluate the actual server
                   instances.</p>
                 </div>
                 <div class='source'>
@@ -162,9 +162,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the value for the given <code>key</code> in the :properties hash of
-                  the <code>options</code>. If no :properties hash exists in
-                  <code>options</code>, this returns <code>nil</code>.</p>
+                  <p>Returns the value for the given <tt>key</tt> in the :properties hash of the
+                  <tt>options</tt>. If no :properties hash exists in <tt>options</tt>, this
+                  returns <tt>nil</tt>.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-5B-5D-source'); return false">
@@ -181,7 +181,7 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Sets the given key/value pair in the <code>:properties</code> key in the
+                  <p>Sets the given key/value pair in the <tt>:properties</tt> key in the
                   options hash. If the options hash has no :properties key, it will be
                   created.</p>
                 </div>

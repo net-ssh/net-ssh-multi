@@ -45,7 +45,7 @@
             
             <p>This module represents the actions that are available on session
             collections. Any class that includes this module needs only provide a
-            <code>servers</code> method that returns a list of <a
+            <tt>servers</tt> method that returns a list of <a
             href="Server.html">Net::SSH::Multi::Server</a> instances, and the rest just
             works. See <a href="Session.html">Net::SSH::Multi::Session</a> and <a
             href="Subsession.html">Net::SSH::Multi::Subsession</a> for consumers of
@@ -77,11 +77,11 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns <code>true</code> if any server in the current container has an
-                  open <a href="../../SSH.html">SSH</a> session that is currently processing
-                  any channels. If <code>include_invisible</code> is <code>false</code> (the
-                  default) then invisible channels (such as those created by port forwarding)
-                  will not be counted; otherwise, they will be.</p>
+                  <p>Returns <tt>true</tt> if any server in the current container has an open <a
+                  href="../../SSH.html">SSH</a> session that is currently processing any
+                  channels. If <tt>include_invisible</tt> is <tt>false</tt> (the default)
+                  then invisible channels (such as those created by port forwarding) will not
+                  be counted; otherwise, they will be.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-busy-3F-source'); return false">
@@ -127,22 +127,22 @@
                   
                   <p>If a block is given, it will be invoked whenever data is received across
                   the channel, with three arguments: the channel object, a symbol identifying
-                  which output stream the data was received on (<code>:stdout</code> or
-                  <code>:stderr</code>) and a string containing the data that was received:</p>
+                  which output stream the data was received on (<tt>:stdout</tt> or
+                  <tt>:stderr</tt>) and a string containing the data that was received:</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-string">&quot;command&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">stream</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;[#{ch[:host]} : #{stream}] #{data}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>session.exec(&quot;command&quot;) do |ch, stream, data|&#x000A;  puts &quot;[#{ch[:host]} : #{stream}] #{data}&quot;&#x000A;end</pre>
                   
                   <p>If no block is given, all output will be written to +$stdout+ or +$stderr+,
                   as appropriate.</p>
                   
                   <p>Note that <a href="SessionActions.html#method-i-exec">exec</a> will also
-                  capture the exit status of the process in the <code>:exit_status</code>
+                  capture the exit status of the process in the <tt>:exit_status</tt>
                   property of each channel. Since <a
                   href="SessionActions.html#method-i-exec">exec</a> returns all of the
                   channels in a <a href="Channel.html">Net::SSH::Multi::Channel</a> object,
                   you can check for the exit status like this:</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">exec</span>(<span class="ruby-string">&quot;command&quot;</span>) { <span class="ruby-operator">...</span> }&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span>&#x000A;&#x000A;<span class="ruby-keyword">if</span> <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>[:<span class="ruby-identifier">exit_status</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">0</span> }&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;executing failed on at least one host!&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel = session.exec(&quot;command&quot;) { ... }&#x000A;channel.wait&#x000A;if channel.any? { |c| c[:exit_status] != 0 }&#x000A;  puts &quot;executing failed on at least one host!&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-exec-source'); return false">
@@ -159,9 +159,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Returns the session that is the "master". This defaults to
-                  <code>self</code>, but classes that include this module may wish to change
-                  this if they are subsessions that depend on a master session.</p>
+                  <p>Returns the session that is the "master". This defaults to <tt>self</tt>,
+                  but classes that include this module may wish to change this if they are
+                  subsessions that depend on a master session.</p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-master-source'); return false">
@@ -180,8 +180,8 @@
                   
                   <p>Asks all sessions for all contained servers (see <a
                   href="SessionActions.html#method-i-sessions">sessions</a>) to open a new
-                  channel. When each server responds, the <code>on_confirm</code> block will
-                  be invoked with a single argument, the channel object for that server. This
+                  channel. When each server responds, the <tt>on_confirm</tt> block will be
+                  invoked with a single argument, the channel object for that server. This
                   means that the block will be invoked one time for each session.</p>
                   
                   <p>All new channels will be collected and returned, aggregated into a new <a
@@ -200,7 +200,7 @@
                   <p>Having access to these things lets you more easily report which host (e.g.)
                   data was received from:</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">session</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">channel</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;command&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;    <span class="ruby-identifier">ch</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got data #{data} from #{ch[:host]}&quot;</span>&#x000A;    <span class="ruby-keyword">end</span>&#x000A;  <span class="ruby-keyword">end</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>session.open_channel do |channel|&#x000A;  channel.exec &quot;command&quot; do |ch, success|&#x000A;    ch.on_data do |ch, data|&#x000A;      puts &quot;got data #{data} from #{ch[:host]}&quot;&#x000A;    end&#x000A;  end&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-open_channel-source'); return false">

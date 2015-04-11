@@ -51,16 +51,16 @@
             
             <p>You typically obtain a <a href="Channel.html">Net::SSH::Multi::Channel</a>
             instance via <a
-            href="SessionActions.html#method-i-open_channel">Net::SSH::Multi::SessionActions#open_channel</a>
+            href="SessionActions.html#method-i-open_channel">Net::SSH::Multi::Session#open_channel</a>
             or <a
-            href="SessionActions.html#method-i-exec">Net::SSH::Multi::SessionActions#exec</a>,
+            href="SessionActions.html#method-i-exec">Net::SSH::Multi::Session#exec</a>,
             though there is nothing stopping you from instantiating one yourself with a
             handful of Net::SSH::Connection::Channel objects (though they should be
             associated with connections managed by a <a
             href="Session.html">Net::SSH::Multi::Session</a> object for consistent
             behavior).</p>
             
-            <pre class="ruby"><span class="ruby-identifier">channel</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">open_channel</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span>&#x000A;&#x000A;<span class="ruby-identifier">channel</span>.<span class="ruby-identifier">wait</span></pre>
+            <pre>channel = session.open_channel do |ch|&#x000A;  # ...&#x000A;end&#x000A;channel.wait</pre>
           </div>
           <div id='method-list'>
             <h2>Methods</h2>
@@ -151,13 +151,13 @@
                 <div class='description'>
                   
                   <p>Instantiate a new <a href="Channel.html">Net::SSH::Multi::Channel</a>
-                  instance, controlled by the given <code>connection</code> (a <a
+                  instance, controlled by the given <tt>connection</tt> (a <a
                   href="Session.html">Net::SSH::Multi::Session</a> object) and wrapping the
-                  given <code>channels</code> (Net::SSH::Connection::Channel instances).</p>
+                  given <tt>channels</tt> (Net::SSH::Connection::Channel instances).</p>
                   
                   <p>You will typically never call this directly; rather, you'll get your
                   multi-channel references via <a
-                  href="SessionActions.html#method-i-open_channel">Net::SSH::Multi::SessionActions#open_channel</a>
+                  href="SessionActions.html#method-i-open_channel">Net::SSH::Multi::Session#open_channel</a>
                   and friends.</p>
                 </div>
                 <div class='source'>
@@ -178,7 +178,7 @@
                   
                   <p>Retrieve the property (see <a
                   href="Channel.html#attribute-i-properties">properties</a>) with the given
-                  <code>key</code>.</p>
+                  <tt>key</tt>.</p>
                   
                   <pre>host = channel[:host]</pre>
                 </div>
@@ -199,7 +199,7 @@
                   
                   <p>Set the property (see <a
                   href="Channel.html#attribute-i-properties">properties</a>) with the given
-                  <code>key</code> to the given <code>value</code>.</p>
+                  <tt>key</tt> to the given <tt>value</tt>.</p>
                   
                   <pre>channel[:visited] = true</pre>
                 </div>
@@ -290,13 +290,13 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Perform an <code>exec</code> command on all component channels. The block,
-                  if given, is passed to each component channel, so it will (potentially) be
+                  <p>Perform an <tt>exec</tt> command on all component channels. The block, if
+                  given, is passed to each component channel, so it will (potentially) be
                   invoked once for every channel in the collection. The block will receive
                   two parameters: the specific channel object being operated on, and a
                   boolean indicating whether the exec succeeded or not.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">exec</span> <span class="ruby-string">&quot;ls -l&quot;</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.exec &quot;ls -l&quot; do |ch, success|&#x000A;  # ...&#x000A;end</pre>
                   
                   <p>See the documentation in <a href="../../SSH.html">Net::SSH</a> for
                   Net::SSH::Connection::Channel#exec for more information on how to work with
@@ -321,7 +321,7 @@
                   remote server terminates the channel. The callback will be invoked with one
                   argument: the specific channel object being closed.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_close</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_close do |ch|&#x000A;  # ...&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_close-source'); return false">
@@ -339,11 +339,11 @@
                 <div class='description'>
                   
                   <p>Registers a callback on all component channels, to be invoked when the
-                  remote process emits data (usually on its <code>stdout</code> stream). The
+                  remote process emits data (usually on its <tt>stdout</tt> stream). The
                   block will be invoked with two arguments: the specific channel object, and
                   the data that was received.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got data: #{data}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_data do |ch, data|&#x000A;  puts &quot;got data: #{data}&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_data-source'); return false">
@@ -364,7 +364,7 @@
                   remote server has no further data to send. The callback will be invoked
                   with one argument: the specific channel object being marked EOF.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_eof</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_eof do |ch|&#x000A;  # ...&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_eof-source'); return false">
@@ -382,12 +382,12 @@
                 <div class='description'>
                   
                   <p>Registers a callback on all component channels, to be invoked when the
-                  remote process emits "extended" data (typically on its <code>stderr</code>
+                  remote process emits "extended" data (typically on its <tt>stderr</tt>
                   stream). The block will be invoked with three arguments: the specific
                   channel object, an integer describing the data type (usually a 1 for
-                  <code>stderr</code>) and the data that was received.</p>
+                  <tt>stderr</tt>) and the data that was received.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_extended_data</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;got extended data: #{data}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_extended_data do |ch, type, data|&#x000A;  puts &quot;got extended data: #{data}&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_extended_data-source'); return false">
@@ -410,7 +410,7 @@
                   description of the error (as a string), and an integer code representing
                   the error.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_open_failed</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">description</span>, <span class="ruby-identifier">code</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_open_failed do |ch, description, code|&#x000A;  # ...&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_open_failed-source'); return false">
@@ -431,7 +431,7 @@
                   idle portion of the connection event loop. The callback will be invoked
                   with one argument: the specific channel object being processed.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_process</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_process do |ch|&#x000A;  # ...&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_process-source'); return false">
@@ -449,12 +449,12 @@
                 <div class='description'>
                   
                   <p>Registers a callback on all component channels, to be invoked when the
-                  remote server sends a channel request of the given <code>type</code>. The
+                  remote server sends a channel request of the given <tt>type</tt>. The
                   callback will be invoked with two arguments: the specific channel object
                   receiving the request, and a Net::SSH::Buffer instance containing the
                   request-specific data.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">on_request</span>(<span class="ruby-string">&quot;exit-status&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">data</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;exited with #{data.read_long}&quot;</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.on_request(&quot;exit-status&quot;) do |ch, data|&#x000A;  puts &quot;exited with #{data.read_long}&quot;&#x000A;end</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('method-i-on_request-source'); return false">
@@ -471,14 +471,14 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Perform a <code>request_pty</code> command on all component channels. The
+                  <p>Perform a <tt>request_pty</tt> command on all component channels. The
                   block, if given, is passed to each component channel, so it will
                   (potentially) be invoked once for every channel in the collection. The
                   block will receive two parameters: the specific channel object being
                   operated on, and a boolean indicating whether the pty request succeeded or
                   not.</p>
                   
-                  <pre class="ruby"><span class="ruby-identifier">channel</span>.<span class="ruby-identifier">request_pty</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ch</span>, <span class="ruby-identifier">success</span><span class="ruby-operator">|</span>&#x000A;  <span class="ruby-comment"># ...</span>&#x000A;<span class="ruby-keyword">end</span></pre>
+                  <pre>channel.request_pty do |ch, success|&#x000A;  # ...&#x000A;end</pre>
                   
                   <p>See the documentation in <a href="../../SSH.html">Net::SSH</a> for
                   Net::SSH::Connection::Channel#request_pty for more information on how to
@@ -499,9 +499,9 @@
                 </div>
                 <div class='description'>
                   
-                  <p>Send the given <code>data</code> to each component channel. It will be sent
-                  to the remote process, typically being received on the process'
-                  <code>stdin</code> stream.</p>
+                  <p>Send the given <tt>data</tt> to each component channel. It will be sent to
+                  the remote process, typically being received on the process' <tt>stdin</tt>
+                  stream.</p>
                   
                   <pre>channel.send_data &quot;password\n&quot;</pre>
                 </div>
