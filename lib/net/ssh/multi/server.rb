@@ -1,4 +1,5 @@
 require 'net/ssh'
+require 'timeout'
 
 module Net; module SSH; module Multi
   # Encapsulates the connection information for a single remote server, as well
