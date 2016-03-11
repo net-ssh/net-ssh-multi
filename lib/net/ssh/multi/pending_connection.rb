@@ -31,6 +31,28 @@ module Net; module SSH; module Multi
       end
     end
 
+    # Represents a #forward action.
+    class ForwardRecording
+      def initialize
+        @recordings = []
+      end
+
+      def remote(port, host, remote_port, remote_host="127.0.0.1")
+        @recordings << [:remote, port, host, remote_port, remote_host]
+      end
+
+      def replay_on(session)
+        forward = session.forward
+        @recordings.each {|args| forward.send *args}
+      end
+    end
+
+    def forward
+      forward = ForwardRecording.new
+      @recordings << forward
+      forward
+    end
+
     # Represents a #send_global_request action.
     class SendGlobalRequestRecording #:nodoc:
       attr_reader :type, :extra, :callback
