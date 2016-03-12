@@ -31,8 +31,14 @@ begin
 
     s.license = "MIT"
 
-    s.signing_key = File.join('/mnt/gem/', 'gem-private_key.pem')
-    s.cert_chain  = ['gem-public_cert.pem']
+    unless ENV['NET_SSH_NOKEY']
+      signing_key = File.join('/mnt/gem/', 'net-ssh-private_key.pem')
+      s.signing_key = signing_key
+      s.cert_chain  = ['gem-public_cert.pem']
+      unless (Rake.application.top_level_tasks & ['build','install']).empty?
+        raise "No key found at #{signing_key} for signing, use rake <taskname> NET_SSH_NOKEY=1 to build without key" unless File.exist?(signing_key)
+      end
+    end
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
