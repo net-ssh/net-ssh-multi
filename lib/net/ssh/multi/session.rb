@@ -425,7 +425,7 @@ module Net; module SSH; module Multi
     # +false+ (the block returned +false+).
     def process(wait=nil, &block)
       realize_pending_connections!
-      wait = @connect_threads.any? ? 0 : wait
+      wait = @connect_threads.any? ? 0 : io_select_wait(wait)
 
       return false unless preprocess(&block)
 
@@ -439,6 +439,15 @@ module Net; module SSH; module Multi
       else
         return true
       end
+    end
+
+    def io_select_wait(wait)
+      [wait, keepalive_interval].compact.min
+    end
+
+    def keepalive_interval
+      servers = server_list.select { |s| s.options[:keepalive] }
+      servers.map { |s| s.options[:keepalive_interval] }.compact.min
     end
 
     # Runs the preprocess stage on all servers. Returns false if the block

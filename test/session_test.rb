@@ -198,4 +198,25 @@ class SessionTest < Minitest::Test
     IO.expects(:select).with([:a, :b, :c], [:a, :c], nil, 5).returns([[:b, :c], [:a, :c]])
     @session.process(5)
   end
+
+  def test_process_should_pass_minimum_keepalive_interval_as_io_select_timeout
+    @session.use('h1', :keepalive => true)
+    @session.use('h2', :keepalive_interval => 1)
+    @session.use('h3', :keepalive => true, :keepalive_interval => 2)
+    @session.use('h4', :keepalive => true, :keepalive_interval => 3)
+    IO.expects(:select).with([], [], nil, 2)
+    @session.process
+  end
+
+  def test_process_should_pass_wait_as_io_select_timeout_if_provided_and_minimum
+    @session.use('h1', :keepalive => true, :keepalive_interval => 1)
+    IO.expects(:select).with([], [], nil, 1)
+    @session.process(2)
+  end
+
+  def test_process_should_pass_nil_as_io_select_timeout_by_default
+    @session.use('h1')
+    IO.expects(:select).with([], [], nil, nil)
+    @session.process
+  end
 end
