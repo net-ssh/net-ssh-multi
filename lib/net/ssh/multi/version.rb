@@ -7,13 +7,17 @@ module Net; module SSH; module Multi
     MAJOR = 1
 
     # The minor component of the library's version
-    MINOR = 2
+    MINOR = 3
 
     # The tiny component of the library's version
-    TINY  = 1
+    TINY  = 0
+
+    # The prerelease component of this version of the Net::SSH library 
+    # nil allowed
+    PRE   = "rc1"
 
     # The library's version as a Version instance
-    CURRENT = new(MAJOR, MINOR, TINY)
+    CURRENT = new(*[MAJOR, MINOR, TINY, PRE].compact)
 
     # The library's version as a String instance
     STRING = CURRENT.to_s
