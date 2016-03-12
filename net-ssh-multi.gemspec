@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.rubyforge_project = "net-ssh-multi"
   s.rubygems_version = "2.4.6"
-  s.signing_key = "/mnt/gem/gem-private_key.pem"
+  s.signing_key = "/mnt/gem/net-ssh-private_key.pem"
   s.summary = "Control multiple Net::SSH connections via a single interface."
 
   if s.respond_to? :specification_version then
