@@ -21,6 +21,9 @@ module Net; module SSH
   #     # define the servers we want to use
   #     session.use 'user1@host1'
   #     session.use 'user2@host2'
+  #     
+  #     # Set optional connection options as accepted by Net::SSH.start. See http://net-ssh.github.io/net-ssh/Net/SSH.html#method-c-start for available options.
+  #     session.use 'host3', forward_agent: true, user: 'user3'
   # 
   #     # define servers in groups for more granular access
   #     session.group :app do
