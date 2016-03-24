@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Jamis Buck", "Delano Mandelbaum"]
   s.cert_chain = ["gem-public_cert.pem"]
-  s.date = "2016-03-12"
+  s.date = "2016-03-24"
   s.description = "Control multiple Net::SSH connections via a single interface."
   s.email = "net-ssh@solutious.com"
   s.extra_rdoc_files = [
