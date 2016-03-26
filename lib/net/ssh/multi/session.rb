@@ -442,12 +442,11 @@ module Net; module SSH; module Multi
     end
 
     def io_select_wait(wait)
-      [wait, keepalive_interval].compact.min
+      [wait, max_select_wait_time].compact.min
     end
 
-    def keepalive_interval
-      servers = server_list.select { |s| s.options[:keepalive] }
-      servers.map { |s| s.options[:keepalive_interval] }.compact.min
+    def max_select_wait_time
+      server_list.map(&:max_select_wait_time).compact.min
     end
 
     # Runs the preprocess stage on all servers. Returns false if the block

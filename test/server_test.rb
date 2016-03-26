@@ -211,6 +211,19 @@ class ServerTest < Minitest::Test
     assert_equal :result, srv.postprocess([1,11,3], [18,14,7,12])
   end
 
+  def test_max_select_wait_time_should_call_session_max_select_wait_time_when_session_is_open
+    srv = server('host')
+    session = expect_connection_to(srv)
+    session.expects(:max_select_wait_time).returns(:result)
+    srv.session(true)
+    assert_equal :result, srv.max_select_wait_time
+  end
+
+  def test_max_select_wait_time_should_return_nil_when_session_is_not_open
+    srv = server('host')
+    assert_nil srv.max_select_wait_time
+  end
+
   private
 
     class MockIO

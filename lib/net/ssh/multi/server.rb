@@ -229,5 +229,9 @@ module Net; module SSH; module Multi
         listeners = session.listeners.keys
         session.postprocess(listeners & readers, listeners & writers)
       end
+
+      def max_select_wait_time
+        session.max_select_wait_time if session
+      end
   end
 end; end; end
