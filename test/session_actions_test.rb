@@ -94,7 +94,7 @@ class SessionActionsTest < Minitest::Test
     c.expects(:on_extended_data).yields(c, 1, "stderr")
     c.expects(:on_request)
     results = {}
-    @session.exec("something") do |c, stream, data|
+    @session.exec("something") do |_, stream, data|
       results[stream] = data
     end
     assert_equal({:stdout => "stdout", :stderr => "stderr"}, results)

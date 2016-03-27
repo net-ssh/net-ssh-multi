@@ -56,6 +56,7 @@ module Net; module SSH; module Multi
 
       @gateway = @options.delete(:via)
       @failed = false
+      @session = @ready_session = nil
     end
 
     # Returns the value of the server property with the given +key+. Server
