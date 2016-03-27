@@ -43,7 +43,7 @@ module Net; module SSH; module Multi
 
       def replay_on(session)
         forward = session.forward
-        @recordings.each {|args| forward.send *args}
+        @recordings.each { |args| forward.send(*args) }
       end
     end
 
