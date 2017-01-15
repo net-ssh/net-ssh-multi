@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
     "test/session_test.rb",
     "test/test_all.rb"
   ]
-  s.homepage = "https://github.com/net-ssh/net-scp"
+  s.homepage = "https://github.com/net-ssh/net-ssh-multi"
   s.licenses = ["MIT"]
   s.rubyforge_project = "net-ssh-multi"
   s.rubygems_version = "2.4.6"
@@ -74,4 +74,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<mocha>, [">= 0"])
   end
 end
-
