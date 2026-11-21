@@ -45,7 +45,7 @@ module Net; module SSH; module Multi
       @master = master
       @options = options.dup
 
-      @user, @host, port = host.match(/^(?:([^;,:=]+)@|)(.*?)(?::(\d+)|)$/)[1,3]
+      @user, @host, port = host.match(/^(?:([^;,:=]+)@|)\[?(.*?)\]?(?::(\d+)|)$/)[1,3]
 
       user_opt, port_opt = @options.delete(:user), @options.delete(:port)
 
@@ -56,6 +56,7 @@ module Net; module SSH; module Multi
 
       @gateway = @options.delete(:via)
       @failed = false
+      @session = @ready_session = nil
     end
 
     # Returns the value of the server property with the given +key+. Server

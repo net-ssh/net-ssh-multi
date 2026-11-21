@@ -3,7 +3,7 @@ require 'net/ssh/multi/channel'
 
 class ChannelTest < Minitest::Test
   def test_each_should_iterate_over_each_component_channel
-    channels = [c1 = mock('channel'), c2 = mock('channel'), c3 = mock('channel')]
+    channels = [mock('channel'), mock('channel'), mock('channel')]
     channel = Net::SSH::Multi::Channel.new(mock('session'), channels)
     result = []
     channel.each { |c| result << c }
@@ -31,8 +31,8 @@ class ChannelTest < Minitest::Test
 
   def test_request_pty_should_delegate_to_component_channels
     c1, c2, results = mock('channel'), mock('channel'), []
-    c1.expects(:request_pty).with(:foo => 5).yields(c1)
-    c2.expects(:request_pty).with(:foo => 5).yields(c2)
+    c1.expects(:request_pty).with({:foo => 5}).yields(c1)
+    c2.expects(:request_pty).with({:foo => 5}).yields(c2)
     channel = Net::SSH::Multi::Channel.new(mock('session'), [c1, c2])
     assert_equal channel, channel.request_pty(:foo => 5) { |c| results << c }
     assert_equal [c1, c2], results

@@ -118,8 +118,8 @@ module Net; module SSH; module Multi
     #   end
     def exec(command, &block)
       open_channel do |channel|
-        channel.exec(command) do |ch, success|
-          raise "could not execute command: #{command.inspect} (#{ch[:host]})" unless success
+        channel.exec(command) do |c, success|
+          raise "could not execute command: #{command.inspect} (#{c[:host]})" unless success
 
           channel.on_data do |ch, data|
             if block

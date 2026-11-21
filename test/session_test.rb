@@ -38,7 +38,7 @@ class SessionTest < Minitest::Test
   end
 
   def test_via_should_instantiate_and_set_default_gateway
-    Net::SSH::Gateway.expects(:new).with('host', 'user', :a => :b).returns(:gateway)
+    Net::SSH::Gateway.expects(:new).with('host', 'user', {:a => :b}).returns(:gateway)
     assert_equal @session, @session.via('host', 'user', :a => :b)
     assert_equal :gateway, @session.default_gateway
   end

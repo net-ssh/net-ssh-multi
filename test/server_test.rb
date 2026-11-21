@@ -14,6 +14,10 @@ class ServerTest < Minitest::Test
     assert_equal "hello", server('host', :properties => { :foo => "hello" })[:foo]
   end
 
+  def test_ipv6_works_with_given_port_using_bracket_notation
+    assert_equal 9022, server('[2001:DB8::1234]:9022').port
+  end
+
   def test_port_should_return_22_by_default
     assert_equal 22, server('host').port
   end
