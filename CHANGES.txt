@@ -3,6 +3,7 @@
 * Require net-ssh >= 4.0 [mfazekas]
 * Replace Jeweler and Travis with a hand-written gemspec, a Gemfile and GitHub Actions for Ruby 2.6 to 4.0 [mfazekas]
 * Fix the gemspec homepage, and ship the renewed net-ssh-public_cert.pem used to sign releases [mfazekas]
+* Wake up for keepalives when `keepalive: true` is set without `keepalive_interval`, using net-ssh's default interval [Eugene Kenny, #17]
 
 === 1.3.0.rc1 / 12 Mar 2016
 
