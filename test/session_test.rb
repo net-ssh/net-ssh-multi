@@ -200,22 +200,28 @@ class SessionTest < Minitest::Test
   end
 
   def test_process_should_pass_minimum_keepalive_interval_as_io_select_timeout
-    @session.use('h1', :keepalive => true)
-    @session.use('h2', :keepalive_interval => 1)
-    @session.use('h3', :keepalive => true, :keepalive_interval => 2)
-    @session.use('h4', :keepalive => true, :keepalive_interval => 3)
+    s1 = @session.use('h1', :keepalive => true)
+    s1.expects(:max_select_wait_time).returns(300)
+    s2 = @session.use('h2', :keepalive_interval => 1)
+    s2.expects(:max_select_wait_time).returns(nil)
+    s3 = @session.use('h3', :keepalive => true, :keepalive_interval => 2)
+    s3.expects(:max_select_wait_time).returns(2)
+    s4 = @session.use('h4', :keepalive => true, :keepalive_interval => 3)
+    s4.expects(:max_select_wait_time).returns(3)
     IO.expects(:select).with([], [], nil, 2)
     @session.process
   end
 
   def test_process_should_pass_wait_as_io_select_timeout_if_provided_and_minimum
-    @session.use('h1', :keepalive => true, :keepalive_interval => 1)
+    s1 = @session.use('h1', :keepalive => true, :keepalive_interval => 2)
+    s1.expects(:max_select_wait_time).returns(2)
     IO.expects(:select).with([], [], nil, 1)
-    @session.process(2)
+    @session.process(1)
   end
 
   def test_process_should_pass_nil_as_io_select_timeout_by_default
-    @session.use('h1')
+    s1 = @session.use('h1')
+    s1.expects(:max_select_wait_time).returns(nil)
     IO.expects(:select).with([], [], nil, nil)
     @session.process
   end
