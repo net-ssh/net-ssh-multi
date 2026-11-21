@@ -1,5 +1,7 @@
 doc
 pkg
 *.swp
+.bundle/
+Gemfile.lock
 
 .DS_Store
