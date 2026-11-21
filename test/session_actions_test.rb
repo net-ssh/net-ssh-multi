@@ -27,6 +27,11 @@ class SessionActionsTest < Minitest::Test
     @session = SessionActionsContainer.new
   end
 
+  # Mocha keeps the visibility of the method it stubs, and Kernel#exec is private.
+  def channel_hash
+    { :host => "host" }.tap { |c| c.singleton_class.send(:public, :exec) }
+  end
+
   def test_busy_should_be_true_if_any_server_is_busy
     srv1, srv2, srv3 = @session.use('h1'), @session.use('h2'), @session.use('h3')
     srv1.stubs(:busy?).returns(false)
@@ -80,14 +85,14 @@ class SessionActionsTest < Minitest::Test
   end
 
   def test_exec_should_raise_exception_if_channel_cannot_exec_command
-    c = { :host => "host" }
+    c = channel_hash
     @session.expects(:open_channel).yields(c).returns(c)
     c.expects(:exec).with('something').yields(c, false)
     assert_raises(RuntimeError) { @session.exec("something") }
   end
 
   def test_exec_with_block_should_pass_data_and_extended_data_to_block
-    c = { :host => "host" }
+    c = channel_hash
     @session.expects(:open_channel).yields(c).returns(c)
     c.expects(:exec).with('something').yields(c, true)
     c.expects(:on_data).yields(c, "stdout")
@@ -101,7 +106,7 @@ class SessionActionsTest < Minitest::Test
   end
 
   def test_exec_without_block_should_write_data_and_extended_data_lines_to_stdout_and_stderr
-    c = { :host => "host" }
+    c = channel_hash
     @session.expects(:open_channel).yields(c).returns(c)
     c.expects(:exec).with('something').yields(c, true)
     c.expects(:on_data).yields(c, "stdout 1\nstdout 2\n")
@@ -115,7 +120,7 @@ class SessionActionsTest < Minitest::Test
   end
 
   def test_exec_should_capture_exit_status_of_process
-    c = { :host => "host" }
+    c = channel_hash
     @session.expects(:open_channel).yields(c).returns(c)
     c.expects(:exec).with('something').yields(c, true)
     c.expects(:on_data)
